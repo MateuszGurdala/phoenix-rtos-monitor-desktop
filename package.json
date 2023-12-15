@@ -36,7 +36,8 @@
     "lint": "ng lint",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "ng:serve": "ng serve -c web -o"
   },
   "dependencies": {
     "@angular/common": "16.1.3",

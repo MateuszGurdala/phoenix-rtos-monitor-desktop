@@ -26,7 +26,7 @@ function createWindow() {
         pathIndex = '../dist/index.html';
     }
     const url = new URL(path.join('file:', __dirname, pathIndex));
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     win.loadURL(url.href);
     // Emitted when the window is closed.
     win.on('closed', () => {

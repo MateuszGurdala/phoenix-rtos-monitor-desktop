@@ -1,16 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import {ThreadsMonitoringComponent} from "./core/components/threads-monitoring/threads-monitoring.component";
+import {OnDemandDataComponent} from "./core/components/on-demand-data-page/on-demand-data/on-demand-data.component";
+import {RealTimeDataComponent} from "./core/components/real-time-data/real-time-data.component";
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomeComponent,
+    path: 'monitoring',
+    component: ThreadsMonitoringComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'demand',
+    component: OnDemandDataComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'data',
+    component: RealTimeDataComponent,
     pathMatch: 'full',
   },
   {
     path: '**',
-    redirectTo: '/home',
+    redirectTo: '/data',
   },
 ];
 

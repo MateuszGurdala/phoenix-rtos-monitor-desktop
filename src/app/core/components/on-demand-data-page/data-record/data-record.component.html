@@ -1,0 +1,5 @@
+<div class="data-record">
+    <h1 class="timestamp">{{ recordDetails.timestamp | timestampPipe }}</h1>
+    <h1>Data Type ID: {{ recordDetails.dataTypeId }}</h1>
+    <h1>Data: {{ recordDetails | dataTypePipe}}</h1>
+</div>
