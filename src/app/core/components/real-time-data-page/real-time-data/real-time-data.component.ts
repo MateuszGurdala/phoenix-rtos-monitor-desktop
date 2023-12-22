@@ -1,10 +1,9 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {DataRecordModel} from "../../../../shared/models/data-record.model";
 import {BaseComponent} from "../../../../shared/base-component.directive";
-import {interval, of, switchMap, takeUntil, tap} from "rxjs";
-import {ConnectionService} from "../../../../shared/services/connection.service";
+import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {Config} from "../../../../config";
-import {DataRecord} from "../../../../shared/helpers/data-record";
+import {ConnectionService} from "../../../../shared/services/connection.service";
+import {DataRecordModel} from "../../../../shared/models/data-record.model";
+import {takeUntil, tap} from "rxjs";
 
 @Component({
     selector: 'app-real-time-data',
@@ -43,9 +42,9 @@ export class RealTimeDataComponent extends BaseComponent implements OnInit {
     }
 
     private setupGrid(): void {
-        let gridElement = this.elementRef.nativeElement.getElementsByClassName("data-grid");
+        let gridElement: HTMLElement = this.elementRef.nativeElement.getElementsByClassName("data-grid")[0];
         if (gridElement) {
-            this.renderer.setStyle(gridElement[0], "grid-template-rows", `repeat(${this.gridCount}, 1fr)`)
+            this.renderer.setStyle(gridElement, "grid-template-rows", `repeat(${this.gridCount}, 1fr)`)
         }
     }
 

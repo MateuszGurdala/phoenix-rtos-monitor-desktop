@@ -1,0 +1,34 @@
+@use "styles";
+
+.chart {
+  height: 15%;
+
+  display: grid;
+  grid-template-rows: 100% 1px;
+}
+
+.chart-main {
+  height: 100%;
+  border-width: 2px;
+  border-color: styles.$text-gray;
+  border-style: solid;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  position: relative;
+}
+
+.chart-resolution {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chart-resolution-line {
+  color: styles.$text-gray;
+  font-weight: 700;
+  margin: 0 auto;
+}

@@ -1,0 +1,7 @@
+@use "styles";
+
+:host {
+  height: 60%;
+  background: styles.$accent-gradient;
+  position: absolute;
+}

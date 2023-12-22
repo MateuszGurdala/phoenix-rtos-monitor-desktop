@@ -7,6 +7,7 @@ export abstract class Timestamp {
         const seconds: number = Math.floor(timestamp / this.divider);
 
         return {
+            raw: timestamp,
             milliseconds: (timestamp % this.divider) / 1000,
             seconds: seconds % 60,
             minutes: Math.floor(seconds / 60),

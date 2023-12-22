@@ -1,0 +1,8 @@
+<div class="chart">
+    <div class="chart-main">
+        <process-chart-segment *ngFor="let segmentData of segments" [data]="segmentData"></process-chart-segment>
+    </div>
+    <div class="chart-resolution">
+        <span *ngFor="let _ of resolutionArray" class="chart-resolution-line">|</span>
+    </div>
+</div>
