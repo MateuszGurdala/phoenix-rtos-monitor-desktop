@@ -1,5 +1,5 @@
 <div class="file-data-frame">
-    <data-file-window></data-file-window>
-    <data-file-window></data-file-window>
-    <data-file-window></data-file-window>
+    <data-file-window #file1></data-file-window>
+    <div class="gap" [ngClass]="{'display-none': hideSecondFile}"></div>
+    <data-file-window #file2 [ngClass]="{'display-none': hideSecondFile}"></data-file-window>
 </div>

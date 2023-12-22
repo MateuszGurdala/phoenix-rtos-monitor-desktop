@@ -1,17 +1,46 @@
 @use "../../../../../styles";
 
 .data-record {
-  height: fit-content;
-  display: grid;
-  grid-template-columns: 15% 180px 70%;
-  width: fit-content;
+  min-height: 30px;
+  display: flex;
+  flex-direction: row;
+}
 
-  h1 {
-    margin: 0;
-    font-size: 20px;
-  }
+h1 {
+  display: inline-block;
+  margin: 0;
+  font-size: 20px;
 }
 
 .timestamp {
+  display: inline-block;
+  max-width: 250px;
+}
 
+.timestamp-data {
+  min-width: 130px;
+}
+
+.data-type {
+  display: inline-block;
+  max-width: 180px;
+  min-width: 60px;
+}
+
+.data-type-id {
+  min-width: 60px;
+}
+
+.data {
+  display: inline-block;
+  min-width: 370px;
+}
+
+.display-none {
+  display: none;
+}
+
+.gap {
+  width: 1%;
+  min-width: 10px;
 }

@@ -1,8 +1,9 @@
 <div class="file-window">
     <div class="header">
-        <input #fileName class="file-name" type="text">
+        <input #fileName class="file-name-input" type="text">
+        <span class="material-symbols-outlined clear-icon" (click)="onClearFileName()">close</span>
         <span class="material-symbols-outlined" (click)="onLoadFile()">system_update_alt</span>
-        <span class="material-symbols-outlined" (click)="onClear()">scan_delete</span>
+        <span class="material-symbols-outlined" (click)="onClearFileData()">scan_delete</span>
     </div>
     <div class="content">
         <data-record *ngFor="let record of fileRecords;" [recordDetails]="record"></data-record>

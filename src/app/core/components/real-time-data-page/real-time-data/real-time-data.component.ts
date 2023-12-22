@@ -1,8 +1,10 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {DataRecordModel} from "../../../../shared/models/data-record.model";
 import {BaseComponent} from "../../../../shared/base-component.directive";
-import {takeUntil, tap} from "rxjs";
+import {interval, of, switchMap, takeUntil, tap} from "rxjs";
 import {ConnectionService} from "../../../../shared/services/connection.service";
+import {Config} from "../../../../config";
+import {DataRecord} from "../../../../shared/helpers/data-record";
 
 @Component({
     selector: 'app-real-time-data',
@@ -10,7 +12,7 @@ import {ConnectionService} from "../../../../shared/services/connection.service"
     styleUrls: ['./real-time-data.component.scss']
 })
 export class RealTimeDataComponent extends BaseComponent implements OnInit {
-    private gridCount: number = 100;
+    private gridCount: number = Config.RealTime.gridCount;
 
     public data: DataRecordModel<any>[] = [];
 
@@ -26,14 +28,18 @@ export class RealTimeDataComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.setupGrid();
 
-        this.connectionService.realTimeDataStream
+        const dataStream = interval(1000)
             .pipe(
-                tap((): void => {
-                    if (this.data.length === this.gridCount) {
-                        this.data.shift();
-                    }
-                }),
-                takeUntil(this.onDestroy))
+                switchMap(() => of(DataRecord.parse("8201120000,11,tereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext")))
+            );
+
+        dataStream.pipe(
+            tap((): void => {
+                if (this.data.length === this.gridCount) {
+                    this.data.shift();
+                }
+            }),
+            takeUntil(this.onDestroy))
             .subscribe((data: DataRecordModel<any>): void => {
                 this.data.push(data);
                 this.forceUpdateUI();

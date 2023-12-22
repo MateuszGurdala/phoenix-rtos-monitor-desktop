@@ -1,5 +1,16 @@
 <div class="data-record">
-    <h1 class="timestamp">{{ recordDetails.timestamp | timestampPipe }}</h1>
-    <h1>Data Type ID: {{ recordDetails.dataTypeId }}</h1>
-    <h1>Data: {{ recordDetails | dataTypePipe }}</h1>
+    <div class="timestamp hover-react">
+        <h1 [ngClass]="{'display-none': hideTimestampLabel}">Timestamp:&nbsp;</h1>
+        <h1 class="timestamp-data">{{ recordDetails.timestamp | timestampPipe }}</h1>
+    </div>
+    <div class="gap"></div>
+    <div class="data-type hover-react">
+        <h1 [ngClass]="{'display-none': hideDataTypeLabel}">Data Type&nbsp;</h1>
+        <h1 class="data-type-id">ID:&nbsp;{{ recordDetails.dataTypeId }}</h1>
+    </div>
+    <div class="gap"></div>
+    <div class="data hover-react">
+        <h1 [ngClass]="{'display-none': hideDataLabel}">Data:&nbsp;</h1>
+        <h1>{{ recordDetails | dataTypePipe }}</h1>
+    </div>
 </div>

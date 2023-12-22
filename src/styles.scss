@@ -43,3 +43,28 @@ html, body {
   }
 }
 
+.hover-react {
+  color: $text-gray;
+
+  &:hover {
+    color: $accent;
+  }
+}
+
+textarea:focus, input:focus{
+  outline: none;
+}
+
+
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $accent;
+  border-radius: 10px;
+}

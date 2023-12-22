@@ -41,7 +41,7 @@ export class ConnectionService {
     public demandFile(fileName?: string): void {
         if (fileName) {
             const demandFileCmd: string = Config.API.DemandFile
-                .replace("$1", Config.connectionPort.toString())
+                .replace("$1", Config.OnDemand.connectionPort.toString())
                 .replace("$2", fileName);
 
             this.callShell(demandFileCmd);
@@ -67,7 +67,7 @@ export class ConnectionService {
             this.connectionStatus.next(false);
         });
 
-        this.realTimeServer.listen(Config.tcpPort, "0.0.0.0");
+        this.realTimeServer.listen(Config.RealTime.serverPort, "0.0.0.0");
     }
 
     private onDemandServerSetup(): void {
@@ -99,7 +99,7 @@ export class ConnectionService {
             console.log("OD LOST CONNECTION");
         });
 
-        this.onDemandServer.listen(Config.udpPort, "0.0.0.0");
+        this.onDemandServer.listen(Config.OnDemand.serverPort, "0.0.0.0");
     }
 
     private callShell(command: string): void {

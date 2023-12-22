@@ -37,8 +37,11 @@ export class DataFileWindowComponent extends BaseComponent {
         this.connectionService.demandFile(this.fileNameInput.nativeElement.value);
     }
 
-    public onClear(): void {
+    public onClearFileData(): void {
         this.fileRecords = [];
     }
 
+    public onClearFileName(): void {
+        this.fileNameInput.nativeElement.value = '';
+    }
 }

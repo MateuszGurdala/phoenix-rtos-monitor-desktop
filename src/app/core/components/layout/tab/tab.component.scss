@@ -1,29 +1,31 @@
 @use "styles";
 
-$tab-margin-bottom: 6%;
+$tab-margin-bottom: 20%;
 
+:host {
+  height: calc(100% - $tab-margin-bottom);
+  min-width: 280px;
+  max-width: 320px;
+}
 
 .tab {
-  height: calc(100% - $tab-margin-bottom);
-  min-width: 260px;
-  width: fit-content;
-  padding-left: 1%;
-  margin-bottom: $tab-margin-bottom;
+  height: 100%;
+  padding-left: 2%;
 
   display: flex;
-  flex-direction: column;
-  align-content: center;
 
   container-type: size;
 
   cursor: pointer;
 
   border-color: styles.$accent;
-  border-width: 0 2px 2px 0;
+  border-width: 0 0 0 2px;
   border-style: solid;
+}
 
-  border-bottom-right-radius: 12px;
-  h1 {
-    font-size: 40cqh;
-  }
+h1 {
+  display: inline-block;
+  width: fit-content;
+  font-size: 50cqh;
+  margin: auto;
 }

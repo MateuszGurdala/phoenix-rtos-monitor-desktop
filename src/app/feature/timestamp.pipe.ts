@@ -7,6 +7,12 @@ import {TimestampModel} from "../shared/models/timestamp.model";
 })
 export class TimestampPipe implements PipeTransform {
     transform(timestamp: TimestampModel): string {
-        return `Timestamp: ${timestamp.hours}:${timestamp.minutes}:${timestamp.seconds}.${timestamp.milliseconds}`
+        return `${timestamp.hours}:${timestamp.minutes}:${timestamp.seconds}.${this.pad(timestamp.milliseconds, 3)}`
+    }
+
+    private pad(num: number, size: number): string {
+        let str: string = num + "";
+        while (str.length < size) str = "0" + str;
+        return str;
     }
 }
