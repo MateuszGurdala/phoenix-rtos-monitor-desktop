@@ -28,18 +28,14 @@ export class RealTimeDataComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.setupGrid();
 
-        const dataStream = interval(1000)
+        this.connectionService.realTimeDataStream
             .pipe(
-                switchMap(() => of(DataRecord.parse("8201120000,11,tereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext")))
-            );
-
-        dataStream.pipe(
-            tap((): void => {
-                if (this.data.length === this.gridCount) {
-                    this.data.shift();
-                }
-            }),
-            takeUntil(this.onDestroy))
+                tap((): void => {
+                    if (this.data.length === this.gridCount) {
+                        this.data.shift();
+                    }
+                }),
+                takeUntil(this.onDestroy))
             .subscribe((data: DataRecordModel<any>): void => {
                 this.data.push(data);
                 this.forceUpdateUI();
