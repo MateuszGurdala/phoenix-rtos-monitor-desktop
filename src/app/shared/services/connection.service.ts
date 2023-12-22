@@ -2,31 +2,35 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as net from 'net';
 import {Injectable} from '@angular/core';
-import {RealTimeDataRecordModel} from "../models/real-time-data-record.model";
+import {DataRecordModel} from "../models/data-record.model";
 import {Server, Socket} from "node:net";
 import {Subject} from "rxjs";
-import {RealTimeDataRecord} from "../helpers/real-time-data-record";
+import {DataRecord} from "../helpers/data-record";
+import {Config} from "../../config";
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConnectionService {
-    private childProcess!: typeof childProcess;
-    private fs!: typeof fs;
-    private net!: typeof net;
-    private server: Server;
+    private readonly childProcess!: typeof childProcess;
+    private readonly net!: typeof net;
+    private readonly fs!: typeof fs;
+    private realTimeServer: Server;
+    private onDemandServer: Server;
 
-    public dataStream: Subject<RealTimeDataRecordModel<any>> = new Subject<RealTimeDataRecordModel<any>>();
-    public connectionStatus: Subject<boolean> = new Subject<boolean>();
+    public readonly realTimeDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
+    public readonly onDemandDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
+    public readonly connectionStatus: Subject<boolean> = new Subject<boolean>();
     public isConnected: boolean = false;
 
     constructor() {
-        // Conditional imports
         if (this.isElectron) {
-            this.moduleSetup();
-            this.logSetupInfo();
+            this.childProcess = (window as any).require('child_process');
+            this.net = (window as any).require('net');
+            this.fs = (window as any).require('fs');
 
-            this.serverSetup();
+            this.realTimeDataServerSetup();
+            this.onDemandServerSetup();
         }
     }
 
@@ -34,48 +38,74 @@ export class ConnectionService {
         return !!(window && window.process && window.process.type);
     }
 
-    private moduleSetup(): void {
-        this.childProcess = (window as any).require('child_process');
-        this.fs = (window as any).require('fs');
-        this.net = (window as any).require('net');
+    public demandFile(fileName?: string): void {
+        if (fileName) {
+            const demandFileCmd: string = Config.API.DemandFile
+                .replace("$1", Config.connectionPort.toString())
+                .replace("$2", fileName);
 
+            this.callShell(demandFileCmd);
+        }
     }
 
-    private logSetupInfo(): void {
-        this.childProcess.exec('node -v', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`stderr: ${stderr}`);
-                return;
-            }
-            console.log(`stdout:\n${stdout}`);
-        });
-    }
-
-    private serverSetup(): void {
-        this.server = this.net.createServer((socket: Socket): void => {
+    private realTimeDataServerSetup(): void {
+        this.realTimeServer = this.net.createServer((socket: Socket): void => {
             socket.on("data", (data: Buffer): void => {
-                this.dataStream.next(RealTimeDataRecord.parse(data));
+                this.realTimeDataStream.next(DataRecord.parse(data.toString().split('\n')[0]));
             });
         });
 
-        this.server.on("connection", (socket: Socket): void => {
-            console.log("CONNECTED: " + socket.remoteAddress + ":" + socket.remotePort);
+        this.realTimeServer.on("connection", (socket: Socket): void => {
+            console.log("RT CONNECTED: " + socket.remoteAddress + ":" + socket.remotePort);
             this.isConnected = true;
             this.connectionStatus.next(true);
         });
 
-        this.server.on("disconnect", (): void => {
-            console.log("LOST CONNECTION");
+        this.realTimeServer.on("disconnect", (): void => {
+            console.log("RT LOST CONNECTION");
             this.isConnected = false;
             this.connectionStatus.next(false);
         });
 
-        this.server.listen(3171, "0.0.0.0");
+        this.realTimeServer.listen(Config.tcpPort, "0.0.0.0");
     }
 
+    private onDemandServerSetup(): void {
+        this.onDemandServer = this.net.createServer((socket: Socket): void => {
+            socket.on("data", (data: Buffer): void => {
+                const tokens: string[] = data.toString().split('\n');
+                tokens.pop(); // Last token is just empty strings
 
+                const records: DataRecordModel<any>[] = tokens.map((token: string): DataRecordModel<any> => {
+                    let temp: string[] = token.split('\x00');
+                    let record: string | undefined = temp.at(0) === '' ? temp.at(temp.length - 1) : temp.at(0);
+                    return DataRecord.parse(record as string);
+                })
+
+                records.forEach((record: DataRecordModel<any>): void => {
+                    this.onDemandDataStream.next(record);
+                })
+            });
+        });
+
+        this.onDemandServer.on("connection", (socket: Socket): void => {
+            console.log("OD CONNECTED: " + socket.remoteAddress + ":" + socket.remotePort);
+        });
+
+        this.onDemandServer.on("disconnect", (): void => {
+            console.log("OD LOST CONNECTION");
+        });
+
+        this.onDemandServer.listen(Config.udpPort, "0.0.0.0");
+    }
+
+    private callShell(command: string): void {
+        this.childProcess.exec(command, (error: any, stdout: string, stderr: string): void => {
+            if (!error) {
+                console.log(stdout);
+            } else {
+                console.log(stderr);
+            }
+        });
+    }
 }

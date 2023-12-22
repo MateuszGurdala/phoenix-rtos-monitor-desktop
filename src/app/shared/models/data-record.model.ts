@@ -1,6 +1,6 @@
 import {TimestampModel} from "./timestamp.model";
 
-export interface RealTimeDataRecordModel<DataType> {
+export interface DataRecordModel<DataType> {
     timestamp: TimestampModel;
     dataTypeId: number;
     data: DataType;

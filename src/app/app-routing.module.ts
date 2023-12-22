@@ -1,33 +1,34 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {ThreadsMonitoringComponent} from "./core/components/threads-monitoring/threads-monitoring.component";
 import {OnDemandDataComponent} from "./core/components/on-demand-data-page/on-demand-data/on-demand-data.component";
-import {RealTimeDataComponent} from "./core/components/real-time-data/real-time-data.component";
+import {RealTimeDataComponent} from "./core/components/real-time-data-page/real-time-data/real-time-data.component";
 
 const routes: Routes = [
-  {
-    path: 'monitoring',
-    component: ThreadsMonitoringComponent,
-    pathMatch: 'full',
-  },
-  {
-    path: 'demand',
-    component: OnDemandDataComponent,
-    pathMatch: 'full',
-  },
-  {
-    path: 'data',
-    component: RealTimeDataComponent,
-    pathMatch: 'full',
-  },
-  {
-    path: '**',
-    redirectTo: '/data',
-  },
+    {
+        path: 'monitoring',
+        component: ThreadsMonitoringComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: 'demand',
+        component: OnDemandDataComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: 'data',
+        component: RealTimeDataComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: '**',
+        redirectTo: '/data',
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes, {})],
+    exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

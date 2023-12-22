@@ -1,0 +1,52 @@
+@use 'styles';
+
+$window-w-margin: 5%;
+$window-h-margin: 2%;
+
+.file-window {
+  height: calc(100% - 2 * $window-h-margin);
+  width: calc(100% - $window-w-margin);
+  margin: $window-h-margin auto;
+
+  display: grid;
+  grid-template-rows: 10% 90%;
+  grid-template-columns: 100%;
+  align-items: center;
+
+  border-color: styles.$accent;
+  border-width: 0 3px 4px 0;
+  border-style: solid;
+}
+
+.header {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.content {
+  height: 100%;
+  flex-direction: column;
+}
+
+.file-name {
+  margin-right: auto;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48;
+  font-size: 60px;
+  margin-right: 4%;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    color: styles.$accent;
+  }
+}

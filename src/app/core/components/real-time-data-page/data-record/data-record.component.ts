@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {RealTimeDataRecordModel} from "../../../../shared/models/real-time-data-record.model";
+import {DataRecordModel} from "../../../../shared/models/data-record.model";
 
 @Component({
     selector: 'data-record',
@@ -7,5 +7,5 @@ import {RealTimeDataRecordModel} from "../../../../shared/models/real-time-data-
     styleUrls: ['./data-record.component.scss']
 })
 export class DataRecordComponent {
-    @Input() recordDetails: RealTimeDataRecordModel<any>;
+    @Input() recordDetails: DataRecordModel<any>;
 }

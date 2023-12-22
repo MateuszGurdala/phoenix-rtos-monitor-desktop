@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {RealTimeDataRecordModel} from "../shared/models/real-time-data-record.model";
+import {DataRecordModel} from "../shared/models/data-record.model";
 import {MessageDataTypeModel} from "../shared/models/monitoring-data-types/message-data-type.model";
 import {ScheduleInfoDataTypeModel} from "../shared/models/monitoring-data-types/schedule-info-data-type.model";
 
@@ -8,7 +8,7 @@ import {ScheduleInfoDataTypeModel} from "../shared/models/monitoring-data-types/
     name: "dataTypePipe"
 })
 export class DataTypePipe implements PipeTransform {
-    transform(data: RealTimeDataRecordModel<any>): string {
+    transform(data: DataRecordModel<any>): string {
         switch (data.dataTypeId) {
             case 0:
                 return this.messageTypeTransform(data.data as MessageDataTypeModel);

@@ -1,12 +1,12 @@
 import {MessageDataTypeModel} from "../models/monitoring-data-types/message-data-type.model";
-import {RealTimeDataRecordModel} from "../models/real-time-data-record.model";
+import {DataRecordModel} from "../models/data-record.model";
 import {ScheduleInfoDataTypeModel} from "../models/monitoring-data-types/schedule-info-data-type.model";
 import {TimestampModel} from "../models/timestamp.model";
 import {Timestamp} from "./timestamp";
 
-export abstract class RealTimeDataRecord {
-    public static parse(buffer: Buffer): RealTimeDataRecordModel<any> {
-        let tokens: string[] = buffer.toString().split('\n')[0].split(',');
+export abstract class DataRecord {
+    public static parse(record: string): DataRecordModel<any> {
+        let tokens: string[] = record.split(',');
         let data: any;
 
         switch (Number(tokens[1])) {

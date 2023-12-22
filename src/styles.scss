@@ -10,6 +10,8 @@ $accent-gradient: linear-gradient(0deg, $accent 0%, $accent-tint 50%);
 
 $text-gray: #aaa;
 
+$navbar-height: max(5%, 70px);
+
 html, body {
   margin: 0;
   padding: 0;
@@ -23,6 +25,11 @@ html, body {
   background: $main-gradient;
 
   user-select: none;
+}
+
+:host {
+  height: 100%;
+  width: 100%;
 }
 
 .text-gradient {
