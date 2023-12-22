@@ -84,7 +84,10 @@ export class ConnectionService {
 
                 records.forEach((record: DataRecordModel<any>): void => {
                     this.onDemandDataStream.next(record);
-                })
+                });
+
+                //Send invalid data to signal end of connection
+                this.onDemandDataStream.next(DataRecord.parse(""));
             });
         });
 

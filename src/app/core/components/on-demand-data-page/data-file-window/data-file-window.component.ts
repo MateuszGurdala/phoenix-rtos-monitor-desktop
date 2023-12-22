@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core
 import {ConnectionService} from "../../../../shared/services/connection.service";
 import {DataRecordModel} from "../../../../shared/models/data-record.model";
 import {BaseComponent} from "../../../../shared/base-component.directive";
-import {takeUntil} from "rxjs";
+import {Subscription, takeUntil} from "rxjs";
 
 @Component({
     selector: 'data-file-window',
@@ -14,7 +14,6 @@ export class DataFileWindowComponent extends BaseComponent {
 
     public fileRecords: DataRecordModel<any>[] = [];
 
-
     constructor(
         private connectionService: ConnectionService,
         changeDetector: ChangeDetectorRef
@@ -22,15 +21,24 @@ export class DataFileWindowComponent extends BaseComponent {
         super(changeDetector);
     }
 
-    public loadFile(): void {
-        this.connectionService.onDemandDataStream
+    public onLoadFile(): void {
+        const subscriptionHandle: Subscription = this.connectionService.onDemandDataStream
             .pipe(takeUntil(this.onDestroy))
             .subscribe((data: DataRecordModel<any>): void => {
-                if (data) this.fileRecords.push(data);
-                this.forceUpdateUI();
+                console.log(data);
+                if (data.data !== undefined) {
+                    this.fileRecords.push(data);
+                    this.forceUpdateUI();
+                } else {
+                    subscriptionHandle.unsubscribe();
+                }
             });
 
         this.connectionService.demandFile(this.fileNameInput.nativeElement.value);
+    }
+
+    public onClear(): void {
+        this.fileRecords = [];
     }
 
 }
