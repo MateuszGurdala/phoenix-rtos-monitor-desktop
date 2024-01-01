@@ -5,4 +5,7 @@
     <div class="chart-resolution">
         <span *ngFor="let _ of resolutionArray" class="chart-resolution-line">|</span>
     </div>
+    <div *ngIf="showResolutionDetails" class="chart-resolution">
+        <span *ngFor="let timestamp of resolutionDetails" class="chart-resolution-timestamp">{{ timestamp }}</span>
+    </div>
 </div>

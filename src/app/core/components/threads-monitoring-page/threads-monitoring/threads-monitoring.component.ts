@@ -16,7 +16,8 @@ export class ThreadsMonitoringComponent {
     public onStartMonitoring(value: string): void {
         const pid: number = Number(value);
 
-        if (!this.monitoredProcesses.includes(pid) &&
+        if (pid !== 0 &&
+            !this.monitoredProcesses.includes(pid) &&
             this.monitoredProcesses.length < Config.ThreadsMonitoring.maxProcessesCount) {
             this.connectionService.switchProcessMonitoring(pid);
             this.monitoredProcesses.push(pid);

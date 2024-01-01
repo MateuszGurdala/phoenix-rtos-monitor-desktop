@@ -8,6 +8,7 @@ import {ProcessSegment} from "../../../../shared/helpers/process-segment";
 import {ScheduleInfoDataTypeModel} from "../../../../shared/models/monitoring-data-types/schedule-info-data-type.model";
 import {filter, Observable, pipe, takeUntil, UnaryFunction} from "rxjs";
 import {Config} from "../../../../config";
+import * as buffer from "buffer";
 
 @Component({
     selector: 'process-chart',
@@ -16,15 +17,18 @@ import {Config} from "../../../../config";
 })
 export class ProcessChartComponent extends BaseComponent implements OnInit {
     @Input() pid: number;
+    @Input() showResolutionDetails: boolean = false;
 
     private chartWidthPx: number;
     private currentSegment: ProcessSegment | null = null;
     private lastRecord: DataRecordModel<ScheduleInfoDataTypeModel>;
     private readonly resolution: number = Config.ThreadsMonitoring.resolution;
     private readonly xAxisLimit: number = Config.ThreadsMonitoring.xAxisLimit;
-    private startingTimestamp: number;
+    private readonly increment: number = Math.round(this.xAxisLimit / this.resolution);
+    private startingTimestamp: number = 0;
 
     public resolutionArray: number[] = [...Array(this.resolution).keys()];
+    public resolutionDetails: number[] = [];
     public segments: ProcessSegmentDataModel[] = [];
 
     constructor(
@@ -37,6 +41,7 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.updateResolutionDetails()
         const chartElement: HTMLElement = this.elementRef.nativeElement.getElementsByClassName("chart-main")[0];
         if (chartElement) {
             this.chartWidthPx = chartElement.offsetWidth;
@@ -60,6 +65,7 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
                     this.startingTimestamp = timestampRef;
                     this.segments = [];
                     this.currentSegment = null;
+                    this.updateResolutionDetails();
                 }
 
                 if (!this.currentSegment || record.data.npid == this.pid) {
@@ -79,6 +85,12 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
         return pipe(filter((record: DataRecordModel<ScheduleInfoDataTypeModel>): boolean =>
             record.dataTypeId === MonitoringDataTypeEnum.ScheduleInfo
             && (record.data.pid === this.pid || record.data.npid === this.pid)));
+    }
+
+    private updateResolutionDetails() : void {
+        this.resolutionDetails = this.resolutionArray.map((index: number): number => {
+            return (this.startingTimestamp + this.increment * index)
+        })
     }
 
     private scaleSegmentData(toScaleData: ProcessSegmentDataModel): ProcessSegmentDataModel {
