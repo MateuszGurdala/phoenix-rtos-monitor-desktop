@@ -51,16 +51,12 @@ export abstract class DataRecord {
     }
 
     private static parseScheduleInfo(tokens: string[]): ScheduleInfoDataTypeModel {
-        const subTokens: string[] = tokens[2].split('-')
-
-        const current: string[] = subTokens[0].split('|');
-        const next: string[] = subTokens[1].split('|');
 
         return {
-            pid: Number(current[0]),
-            tid: Number(current[1]),
-            npid: Number(next[0]),
-            ntid: Number(next[1])
+            pid: Number(tokens[2]),
+            tid: Number(tokens[3]),
+            npid: Number(tokens[4]),
+            ntid: Number(tokens[5])
         }
     }
 }

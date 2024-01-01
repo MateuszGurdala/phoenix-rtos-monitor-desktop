@@ -7,6 +7,7 @@ import {ProcessSegmentDataModel} from "../../../../shared/models/process-sement-
 import {ProcessSegment} from "../../../../shared/helpers/process-segment";
 import {ScheduleInfoDataTypeModel} from "../../../../shared/models/monitoring-data-types/schedule-info-data-type.model";
 import {filter, Observable, pipe, takeUntil, UnaryFunction} from "rxjs";
+import {Config} from "../../../../config";
 
 @Component({
     selector: 'process-chart',
@@ -14,17 +15,17 @@ import {filter, Observable, pipe, takeUntil, UnaryFunction} from "rxjs";
     styleUrls: ['./process-chart.component.scss']
 })
 export class ProcessChartComponent extends BaseComponent implements OnInit {
-    @Input() resolution: number = 9;
-    @Input() xAxisLimit: number = 50 * 10000; //ms
-    @Input() pid: number = 9;
+    @Input() pid: number;
+
+    private chartWidthPx: number;
+    private currentSegment: ProcessSegment | null = null;
+    private lastRecord: DataRecordModel<ScheduleInfoDataTypeModel>;
+    private readonly resolution: number = Config.ThreadsMonitoring.resolution;
+    private readonly xAxisLimit: number = Config.ThreadsMonitoring.xAxisLimit;
+    private startingTimestamp: number;
 
     public resolutionArray: number[] = [...Array(this.resolution).keys()];
     public segments: ProcessSegmentDataModel[] = [];
-
-    private startingTimestamp: number;
-    private currentSegment: ProcessSegment | null = null;
-    private chartWidthPx: number;
-    private lastRecord: DataRecordModel<ScheduleInfoDataTypeModel>;
 
     constructor(
         private connectionService: ConnectionService,

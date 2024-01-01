@@ -22,6 +22,7 @@ export class ConnectionService {
     public readonly onDemandDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
     public readonly connectionStatus: Subject<boolean> = new Subject<boolean>();
     public isConnected: boolean = false;
+    public monitoredProcesses: number[] = [];
 
     constructor() {
         if (this.isElectron) {
@@ -46,6 +47,14 @@ export class ConnectionService {
 
             this.callShell(demandFileCmd);
         }
+    }
+
+    public switchProcessMonitoring(pid: number): void {
+        const cmd: string = Config.API.SwitchProcessMonitoring
+            .replace("$1", Config.OnDemand.connectionPort.toString())
+            .replace("$2", pid.toString());
+
+        this.callShell(cmd);
     }
 
     private realTimeDataServerSetup(): void {
