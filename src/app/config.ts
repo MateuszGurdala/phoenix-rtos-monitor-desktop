@@ -4,15 +4,19 @@ class API {
 }
 
 class RealTime {
-    public static readonly serverPort: number = 3171;
-
+    public static serverPort: number = 3171;
     public static readonly gridCount: number = 1000;
 }
 
-class OnDemand {
-    public static readonly connectionPort: number = 5557;
-    public static readonly serverPort: number = 3713;
+class ThreadsMonitoring {
+    public static readonly maxProcessesCount: number = 6;
+    public static resolution: number = 9;
+    public static xAxisLimit: number = 150 * 10000; //ms
+}
 
+class OnDemand {
+    public static connectionPort: number = 5557;
+    public static serverPort: number = 3713;
 }
 
 class BreakingPoints {
@@ -20,12 +24,6 @@ class BreakingPoints {
     public static readonly timestampLabel: number = 1475;
     public static readonly dataTypeLabel: number = 1325;
     public static readonly dataLabel: number = 1250;
-}
-
-class ThreadsMonitoring {
-    public static readonly maxProcessesCount: number = 6;
-    public static readonly resolution: number = 9;
-    public static readonly xAxisLimit: number = 150 * 10000; //ms
 }
 
 export abstract class Config {

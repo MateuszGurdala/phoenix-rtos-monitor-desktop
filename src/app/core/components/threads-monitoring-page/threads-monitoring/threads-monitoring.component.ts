@@ -18,8 +18,8 @@ export class ThreadsMonitoringComponent {
 
         if (pid !== 0 &&
             !this.monitoredProcesses.includes(pid) &&
-            this.monitoredProcesses.length < Config.ThreadsMonitoring.maxProcessesCount) {
-            this.connectionService.switchProcessMonitoring(pid);
+            this.monitoredProcesses.length < Config.ThreadsMonitoring.maxProcessesCount &&
+            this.connectionService.switchProcessMonitoring(pid)) {
             this.monitoredProcesses.push(pid);
         }
     }
@@ -27,8 +27,8 @@ export class ThreadsMonitoringComponent {
     public onStopMonitoring(value: number): void {
         const pid: number = Number(value);
 
-        if (this.monitoredProcesses.includes(pid)) {
-            this.connectionService.switchProcessMonitoring(pid);
+        if (this.monitoredProcesses.includes(pid) &&
+            this.connectionService.switchProcessMonitoring(pid)) {
             this.monitoredProcesses.splice(this.monitoredProcesses.indexOf(pid, 0), 1);
         }
     }

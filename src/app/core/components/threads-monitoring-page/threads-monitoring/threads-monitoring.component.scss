@@ -5,6 +5,8 @@
   width: 100%;
   height: 100%;
   gap: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .add-chart-container {
@@ -12,7 +14,7 @@
   flex-direction: row;
   align-items: center;
   width: 20%;
-  margin: 0 auto;
+  margin: auto auto;
 
   font-size: 2.6cqh;
 

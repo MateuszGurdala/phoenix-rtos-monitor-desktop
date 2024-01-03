@@ -1,5 +1,4 @@
 import * as childProcess from 'child_process';
-import * as fs from 'fs';
 import * as net from 'net';
 import {Injectable} from '@angular/core';
 import {DataRecordModel} from "../models/data-record.model";
@@ -14,7 +13,6 @@ import {Config} from "../../config";
 export class ConnectionService {
     private readonly childProcess!: typeof childProcess;
     private readonly net!: typeof net;
-    private readonly fs!: typeof fs;
     private realTimeServer: Server;
     private onDemandServer: Server;
 
@@ -28,7 +26,6 @@ export class ConnectionService {
         if (this.isElectron) {
             this.childProcess = (window as any).require('child_process');
             this.net = (window as any).require('net');
-            this.fs = (window as any).require('fs');
 
             this.realTimeDataServerSetup();
             this.onDemandServerSetup();
@@ -39,22 +36,27 @@ export class ConnectionService {
         return !!(window && window.process && window.process.type);
     }
 
-    public demandFile(fileName?: string): void {
-        if (fileName) {
+    public demandFile(fileName?: string): boolean {
+        if (fileName && this.isConnected) {
             const demandFileCmd: string = Config.API.DemandFile
                 .replace("$1", Config.OnDemand.connectionPort.toString())
                 .replace("$2", fileName);
 
             this.callShell(demandFileCmd);
         }
+        return this.isConnected;
     }
 
-    public switchProcessMonitoring(pid: number): void {
-        const cmd: string = Config.API.SwitchProcessMonitoring
-            .replace("$1", Config.OnDemand.connectionPort.toString())
-            .replace("$2", pid.toString());
+    public switchProcessMonitoring(pid: number): boolean {
+        if (this.isConnected)
+        {
+            const cmd: string = Config.API.SwitchProcessMonitoring
+                .replace("$1", Config.OnDemand.connectionPort.toString())
+                .replace("$2", pid.toString());
 
-        this.callShell(cmd);
+            this.callShell(cmd);
+        }
+        return this.isConnected
     }
 
     private realTimeDataServerSetup(): void {
@@ -75,6 +77,7 @@ export class ConnectionService {
             this.isConnected = false;
             this.connectionStatus.next(false);
         });
+
 
         this.realTimeServer.listen(Config.RealTime.serverPort, "0.0.0.0");
     }

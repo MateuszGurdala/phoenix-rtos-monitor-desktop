@@ -8,7 +8,6 @@ import {ProcessSegment} from "../../../../shared/helpers/process-segment";
 import {ScheduleInfoDataTypeModel} from "../../../../shared/models/monitoring-data-types/schedule-info-data-type.model";
 import {filter, Observable, pipe, takeUntil, UnaryFunction} from "rxjs";
 import {Config} from "../../../../config";
-import * as buffer from "buffer";
 
 @Component({
     selector: 'process-chart',
