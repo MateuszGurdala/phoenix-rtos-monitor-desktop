@@ -3,3 +3,4 @@ dist
 .angular
 *.xml
 *.iml
+/release/
