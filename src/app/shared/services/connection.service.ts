@@ -11,16 +11,15 @@ import {Config} from "../../config";
     providedIn: 'root',
 })
 export class ConnectionService {
+    private isConnected: boolean = false;
+    private onDemandServer: Server;
     private readonly childProcess!: typeof childProcess;
     private readonly net!: typeof net;
     private realTimeServer: Server;
-    private onDemandServer: Server;
 
-    public readonly realTimeDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
-    public readonly onDemandDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
-    public readonly connectionStatus: Subject<boolean> = new Subject<boolean>();
-    public isConnected: boolean = false;
     public monitoredProcesses: number[] = [];
+    public readonly onDemandDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
+    public readonly realTimeDataStream: Subject<DataRecordModel<any>> = new Subject<DataRecordModel<any>>();
 
     constructor() {
         if (this.isElectron) {
@@ -32,7 +31,7 @@ export class ConnectionService {
         }
     }
 
-    get isElectron(): boolean {
+    public get isElectron(): boolean {
         return !!(window && window.process && window.process.type);
     }
 
@@ -69,15 +68,7 @@ export class ConnectionService {
         this.realTimeServer.on("connection", (socket: Socket): void => {
             console.log("RT CONNECTED: " + socket.remoteAddress + ":" + socket.remotePort);
             this.isConnected = true;
-            this.connectionStatus.next(true);
         });
-
-        this.realTimeServer.on("disconnect", (): void => {
-            console.log("RT LOST CONNECTION");
-            this.isConnected = false;
-            this.connectionStatus.next(false);
-        });
-
 
         this.realTimeServer.listen(Config.RealTime.serverPort, "0.0.0.0");
     }
@@ -105,10 +96,6 @@ export class ConnectionService {
 
         this.onDemandServer.on("connection", (socket: Socket): void => {
             console.log("OD CONNECTED: " + socket.remoteAddress + ":" + socket.remotePort);
-        });
-
-        this.onDemandServer.on("disconnect", (): void => {
-            console.log("OD LOST CONNECTION");
         });
 
         this.onDemandServer.listen(Config.OnDemand.serverPort, "0.0.0.0");

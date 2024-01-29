@@ -1,22 +1,17 @@
-import {ProcessSegmentDataModel} from "../models/process-sement-data.model";
-
 export class ProcessSegment {
+    public readonly start: number;
+    public width: number;
 
     constructor(
         private segmentStart: number,
         private startingTimestamp: number,
         private timestampAxisLength: number
     ) {
+        this.start = this.scale(this.segmentStart);
     }
 
-    public toSegmentDataModel(segmentEnd: number): ProcessSegmentDataModel {
-        const startScaled: number = this.scale(this.segmentStart);
-        const endScaled: number = this.scale(segmentEnd);
-
-        return {
-            start: startScaled,
-            width: endScaled - startScaled
-        }
+    public saveState(segmentEnd: number): void {
+        this.width = this.scale(segmentEnd) - this.start;
     }
 
     private scale(timestamp: number): number {

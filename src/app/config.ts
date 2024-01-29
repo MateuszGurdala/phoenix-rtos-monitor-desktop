@@ -11,7 +11,7 @@ class RealTime {
 class ThreadsMonitoring {
     public static readonly maxProcessesCount: number = 6;
     public static resolution: number = 9;
-    public static xAxisLimit: number = 150 * 10000; //ms
+    public static xAxisLimit: number = 1500 * 1000; //us * 1000
 }
 
 class OnDemand {

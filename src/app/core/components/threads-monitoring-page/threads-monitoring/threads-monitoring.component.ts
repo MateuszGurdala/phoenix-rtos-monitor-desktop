@@ -9,23 +9,24 @@ import {ConnectionService} from "../../../../shared/services/connection.service"
 })
 export class ThreadsMonitoringComponent {
     public monitoredProcesses: number[] = this.connectionService.monitoredProcesses;
+    public maxProcessesCount: number = Config.ThreadsMonitoring.maxProcessesCount;
 
     constructor(private connectionService: ConnectionService) {
     }
 
-    public onStartMonitoring(value: string): void {
-        const pid: number = Number(value);
+    public onStartMonitoring(number: string): void {
+        const pid: number = Number(number);
 
         if (pid !== 0 &&
             !this.monitoredProcesses.includes(pid) &&
-            this.monitoredProcesses.length < Config.ThreadsMonitoring.maxProcessesCount &&
+            this.monitoredProcesses.length < this.maxProcessesCount &&
             this.connectionService.switchProcessMonitoring(pid)) {
             this.monitoredProcesses.push(pid);
         }
     }
 
-    public onStopMonitoring(value: number): void {
-        const pid: number = Number(value);
+    public onStopMonitoring(number: number): void {
+        const pid: number = Number(number);
 
         if (this.monitoredProcesses.includes(pid) &&
             this.connectionService.switchProcessMonitoring(pid)) {

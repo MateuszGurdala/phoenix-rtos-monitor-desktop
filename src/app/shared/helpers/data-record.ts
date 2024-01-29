@@ -51,12 +51,11 @@ export abstract class DataRecord {
     }
 
     private static parseScheduleInfo(tokens: string[]): ScheduleInfoDataTypeModel {
-
         return {
-            pid: Number(tokens[2]),
-            tid: Number(tokens[3]),
-            npid: Number(tokens[4]),
-            ntid: Number(tokens[5])
+            currentProcessId: Number(tokens[2]),
+            currentThreadId: Number(tokens[3]),
+            nextProcessId: Number(tokens[4]),
+            nextThreadId: Number(tokens[5])
         }
     }
 }

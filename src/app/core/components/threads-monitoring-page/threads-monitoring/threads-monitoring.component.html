@@ -5,11 +5,11 @@
             <span class="material-symbols-outlined chart-remove-icon " (click)="onStopMonitoring(pid)">cancel</span>
         </div>
         <process-chart
-                [pid]="pid"
+                [processId]="pid"
                 [showResolutionDetails]="(i + 1) === monitoredProcesses.length"
         ></process-chart>
     </div>
-    <div class="add-chart-container" *ngIf="monitoredProcesses.length < 6">
+    <div class="add-chart-container" *ngIf="monitoredProcesses.length < maxProcessesCount">
         <h1>PID:</h1>
         <input #fileName class="pid-input" type="number" min="1" placeholder="9">
         <span class="material-symbols-outlined" (click)="onStartMonitoring(fileName.value)">add</span>

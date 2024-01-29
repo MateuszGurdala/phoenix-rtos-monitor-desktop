@@ -1,6 +1,6 @@
 export interface ScheduleInfoDataTypeModel {
-    pid: number;
-    tid: number;
-    npid: number;
-    ntid: number;
+    currentProcessId: number;
+    currentThreadId: number;
+    nextProcessId: number;
+    nextThreadId: number;
 }

@@ -1,8 +1,7 @@
-import {Component} from '@angular/core';
-import {ConnectionService} from "./shared/services/connection.service";
 import * as fs from 'fs';
-import * as path from 'path';
+import {Component} from '@angular/core';
 import {Config} from "./config";
+import {ConnectionService} from "./shared/services/connection.service";
 
 @Component({
     selector: 'app-root',
@@ -11,12 +10,10 @@ import {Config} from "./config";
 })
 export class AppComponent {
     private readonly fs!: typeof fs;
-    private readonly path!: typeof path;
 
     constructor(connectionService: ConnectionService) {
         if (connectionService.isElectron) {
             this.fs = (window as any).require('fs');
-            this.path = (window as any).require('path');
 
             this.fs.readFile(this.workingDirPath + 'appConfig.json', 'utf8', (err, data) => {
                 if (err) {
@@ -42,7 +39,7 @@ export class AppComponent {
             appRealTimePort: Config.RealTime.serverPort,
         }
 
-        this.fs.writeFile(this.workingDirPath + 'appConfig.json', JSON.stringify(configObj), 'utf8', () => {
+        this.fs.writeFile(this.workingDirPath + 'appConfig.json', JSON.stringify(configObj), 'utf8', (): void => {
         });
 
         console.log("Default config has been created in " + this.workingDirPath)

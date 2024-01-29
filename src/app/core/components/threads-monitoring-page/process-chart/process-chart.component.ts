@@ -1,5 +1,6 @@
 import {BaseComponent} from "../../../../shared/base-component.directive";
 import {ChangeDetectorRef, Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Config} from "../../../../config";
 import {ConnectionService} from "../../../../shared/services/connection.service";
 import {DataRecordModel} from "../../../../shared/models/data-record.model";
 import {MonitoringDataTypeEnum} from "../../../../shared/enums/monitoring-data-type.enum";
@@ -7,7 +8,6 @@ import {ProcessSegmentDataModel} from "../../../../shared/models/process-sement-
 import {ProcessSegment} from "../../../../shared/helpers/process-segment";
 import {ScheduleInfoDataTypeModel} from "../../../../shared/models/monitoring-data-types/schedule-info-data-type.model";
 import {filter, Observable, pipe, takeUntil, UnaryFunction} from "rxjs";
-import {Config} from "../../../../config";
 
 @Component({
     selector: 'process-chart',
@@ -15,7 +15,7 @@ import {Config} from "../../../../config";
     styleUrls: ['./process-chart.component.scss']
 })
 export class ProcessChartComponent extends BaseComponent implements OnInit {
-    @Input() pid: number;
+    @Input() processId: number;
     @Input() showResolutionDetails: boolean = false;
 
     private chartWidthPx: number;
@@ -47,13 +47,13 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
         }
 
         this.connectionService.realTimeDataStream.pipe(
-                this.filterUnwantedRecords(),
-                takeUntil(this.onDestroy)
-            )
+            this.filterUnwantedRecords(),
+            takeUntil(this.onDestroy)
+        )
             .subscribe((record: DataRecordModel<ScheduleInfoDataTypeModel>): void => {
                 if (this.lastRecord &&
-                    record.data.pid === this.lastRecord.data.pid &&
-                    record.data.npid === this.lastRecord.data.npid)
+                    record.data.currentProcessId === this.lastRecord.data.currentProcessId &&
+                    record.data.nextProcessId === this.lastRecord.data.nextProcessId)
                     return;
 
                 const timestampRef: number = record.timestamp.raw;
@@ -67,11 +67,14 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
                     this.updateResolutionDetails();
                 }
 
-                if (!this.currentSegment || record.data.npid == this.pid) {
-                    this.currentSegment = new ProcessSegment(timestampRef, this.startingTimestamp, this.xAxisLimit);
+                if (!this.currentSegment || record.data.nextProcessId == this.processId) {
+                    this.currentSegment = new ProcessSegment(
+                        timestampRef,
+                        this.startingTimestamp,
+                        this.xAxisLimit);
                 } else {
-                    const segmentData: ProcessSegmentDataModel = this.currentSegment.toSegmentDataModel(timestampRef);
-                    this.segments.push(this.scaleSegmentData(segmentData));
+                    this.currentSegment.saveState(timestampRef);
+                    this.segments.push(this.scaleSegmentData(this.currentSegment));
                     this.forceUpdateUI();
                     this.currentSegment = null;
                 }
@@ -83,16 +86,16 @@ export class ProcessChartComponent extends BaseComponent implements OnInit {
             Observable<DataRecordModel<ScheduleInfoDataTypeModel>>> {
         return pipe(filter((record: DataRecordModel<ScheduleInfoDataTypeModel>): boolean =>
             record.dataTypeId === MonitoringDataTypeEnum.ScheduleInfo
-            && (record.data.pid === this.pid || record.data.npid === this.pid)));
+            && (record.data.currentProcessId === this.processId || record.data.nextProcessId === this.processId)));
     }
 
-    private updateResolutionDetails() : void {
+    private updateResolutionDetails(): void {
         this.resolutionDetails = this.resolutionArray.map((index: number): number => {
             return (this.startingTimestamp + this.increment * index)
         })
     }
 
-    private scaleSegmentData(toScaleData: ProcessSegmentDataModel): ProcessSegmentDataModel {
+    private scaleSegmentData(toScaleData: ProcessSegment): ProcessSegmentDataModel {
         const startScaled: number = this.scale(toScaleData.start)
         const widthScaled: number = this.scale(toScaleData.width)
         return {

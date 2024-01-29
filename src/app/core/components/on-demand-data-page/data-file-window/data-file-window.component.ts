@@ -25,7 +25,6 @@ export class DataFileWindowComponent extends BaseComponent {
         const subscriptionHandle: Subscription = this.connectionService.onDemandDataStream
             .pipe(takeUntil(this.onDestroy))
             .subscribe((data: DataRecordModel<any>): void => {
-                console.log(data);
                 if (data.data !== undefined) {
                     this.fileRecords.push(data);
                     this.forceUpdateUI();

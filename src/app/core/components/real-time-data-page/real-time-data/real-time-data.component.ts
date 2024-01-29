@@ -16,9 +16,9 @@ export class RealTimeDataComponent extends BaseComponent implements OnInit {
     public data: DataRecordModel<any>[] = [];
 
     constructor(
-        private renderer: Renderer2,
-        private elementRef: ElementRef,
         private connectionService: ConnectionService,
+        private elementRef: ElementRef,
+        private renderer: Renderer2,
         changeDetector: ChangeDetectorRef
     ) {
         super(changeDetector);
@@ -47,6 +47,5 @@ export class RealTimeDataComponent extends BaseComponent implements OnInit {
             this.renderer.setStyle(gridElement, "grid-template-rows", `repeat(${this.gridCount}, 1fr)`)
         }
     }
-
 
 }

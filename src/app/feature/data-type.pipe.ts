@@ -25,6 +25,6 @@ export class DataTypePipe implements PipeTransform {
     }
 
     private scheduleInfoTransform(data: ScheduleInfoDataTypeModel): string {
-        return `Process: ${data.pid}->${data.npid} Thread: ${data.tid}->${data.ntid}`;
+        return `Process: ${data.currentProcessId}->${data.nextProcessId} Thread: ${data.currentThreadId}->${data.nextThreadId}`;
     }
 }
